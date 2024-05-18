@@ -9,15 +9,19 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Texture2D cursorTexture;
     private Vector2 cursorHotspot;
 
+    private GameController myGameController;
+
     void Start()
     {
+        myGameController = FindObjectOfType<GameController>();
+        
         cursorHotspot = new Vector2(cursorTexture.width / 2f, cursorTexture.height / 2f);
         Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && myGameController.missilesRemaining > 0)
         {
             // Instantiate the missile
             GameObject newMissile = Instantiate(missilePrefab, missileLauncherPrefab.transform.position, Quaternion.identity);

@@ -10,6 +10,10 @@ public class EnemyMissileSpawner : MonoBehaviour
 
     private float minX, maxX;
 
+    public int missilesToSpawnThisRound = 10;
+    public float delayBetweenMissiles = .5f;
+    float yValue;
+
 
 
     void Start()
@@ -18,13 +22,10 @@ public class EnemyMissileSpawner : MonoBehaviour
         maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0)).x;
 
         float randomX = Random.Range(minX, maxX);
-        float yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
-        Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);   
+        yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
+        // Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);   
 
-
-
-       // Instantiate(enemyMissilePrefab, minX, Quaternion.identity);
-       // Instantiate(enemyMissilePrefab, maxX, Quaternion.identity);
+        StartCoroutine(SpawnMissiles());
     }
 
     
@@ -32,4 +33,21 @@ public class EnemyMissileSpawner : MonoBehaviour
     {
         
     }
+
+    public IEnumerator SpawnMissiles ()
+    {
+        while (missilesToSpawnThisRound > 0)
+        {
+            float randomX = Random.Range(minX, maxX);
+            //yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
+            Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);
+
+            missilesToSpawnThisRound--;
+
+            yield return new WaitForSeconds(delayBetweenMissiles);
+        }
+    }
+
+
+
 }
