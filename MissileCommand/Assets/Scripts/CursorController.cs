@@ -25,6 +25,8 @@ public class CursorController : MonoBehaviour
         {
             // Instantiate the missile
             GameObject newMissile = Instantiate(missilePrefab, missileLauncherPrefab.transform.position, Quaternion.identity);
+            myGameController.missilesRemaining--;
+            myGameController.UpdateMissilesRemainingText();
 
             // Calculate the direction towards the mouse position
             Vector3 targetDirection = Input.mousePosition - Camera.main.WorldToScreenPoint(missileLauncherPrefab.transform.position);
@@ -37,4 +39,12 @@ public class CursorController : MonoBehaviour
             newMissile.transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
         }
     }
-}
+
+
+
+
+
+
+
+
+} //class
