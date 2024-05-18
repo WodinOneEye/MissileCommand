@@ -6,7 +6,11 @@ public class enemyMissile : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private GameObject explosionEnemyMissilePrefab;
+
+    private GameController myGameController;
+
     GameObject[] defenders;
+
     Vector3 target;
 
     void Start()
@@ -25,6 +29,7 @@ public class enemyMissile : MonoBehaviour
     {
         if (col.CompareTag("Defenders"))
         {
+            FindObjectOfType<GameController>().EnemyMissileDestroyed();
             // Instantiate explosion and destroy it after 1 second
             GameObject explosion = Instantiate(explosionEnemyMissilePrefab, transform.position, Quaternion.identity);
             Destroy(explosion, 1f); // Destroy explosion after 1 second
@@ -33,15 +38,17 @@ public class enemyMissile : MonoBehaviour
         }
         else if (col.CompareTag("Ground"))
         {
+            FindObjectOfType<GameController>().EnemyMissileDestroyed();
             MissileExplode();
         }
         else if (col.CompareTag("Explosions"))
         {
+            FindObjectOfType<GameController>().AddMissileDestroyedPoints();
             MissileExplode();
         }
     }
 
-    private void MissileExplode () //spawns explosiond destroys missile
+    private void MissileExplode () //spawns explosion and destroys missile
     {
         GameObject explosion = Instantiate(explosionEnemyMissilePrefab, transform.position, Quaternion.identity);
         Destroy(explosion, 1f);

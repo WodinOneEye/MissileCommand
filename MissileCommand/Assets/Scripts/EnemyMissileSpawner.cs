@@ -16,7 +16,7 @@ public class EnemyMissileSpawner : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         minX = Camera.main.ViewportToWorldPoint(new Vector3(0,1,0)).x;
         maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0)).x;
@@ -25,13 +25,18 @@ public class EnemyMissileSpawner : MonoBehaviour
         yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
         // Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);   
 
-        StartCoroutine(SpawnMissiles());
+        //StartCoroutine(SpawnMissiles());
     }
 
     
     void Update()
     {
         
+    }
+
+    public void StartRound()
+    {
+        StartCoroutine(SpawnMissiles());
     }
 
     public IEnumerator SpawnMissiles ()
