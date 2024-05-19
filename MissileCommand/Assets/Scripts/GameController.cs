@@ -5,75 +5,87 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-
     [SerializeField] private GameObject endOfRoundPanel;
-    
-    EnemyMissileSpawner myEnemyMissileSpawner;
+    private EnemyMissileSpawner myEnemyMissileSpawner;
+    private bool isRoundOver = false;
 
-    bool isRoundOver = false;
-    
     public int score = 0;
     public int level = 1;
-    public int playerMissilesRemaining = 60;
+    public float enemyMissileSpeed = 5f;
+    [SerializeField] private float enemyMissileSpeedMultiplier = 0.25f;
+    public int playerMissilesRemaining = 45;
+    public int currentMissilesLoadedInLauncher = 0;
     private int enemyMissilesThisRound = 20;
     private int enemyMissilesRemainingInRound = 0;
     [SerializeField] private int missileEndOfRoundPoints = 5;
     [SerializeField] private int cityEndOfRoundPoints = 100;
 
-    //Score Values
+    // Score values
     private int missileDestroyedPoints = 25;
 
     [SerializeField] private TextMeshProUGUI myScoreText;
     [SerializeField] private TextMeshProUGUI myLevelText;
     [SerializeField] private TextMeshProUGUI myMissilesText;
+    [SerializeField] private TextMeshProUGUI MissilesLeftInLauncherText;
     [SerializeField] private TextMeshProUGUI countdownText;
-
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
     [SerializeField] private TextMeshProUGUI totalBonusText;
 
-
-
-
     void Start()
     {
+        // Initial setup of missiles
+        currentMissilesLoadedInLauncher = 10;
+        playerMissilesRemaining -= 10;
+
         myEnemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
-        
+
+        // Update UI texts
         UpdateScoreText();
         UpdateLevelText();
         UpdateMissilesRemainingText();
+        UpdateMissilesInLauncherText();
 
         StartRound();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
-        if (enemyMissilesRemainingInRound <=  0 && !isRoundOver)
+        // Check if the round is over
+        if (enemyMissilesRemainingInRound <= 0 && !isRoundOver)
         {
             Debug.Log("Round is over");
             isRoundOver = true;
             StartCoroutine(EndOfRound());
-            
         }
     }
 
+    // Update the remaining missiles text
     public void UpdateMissilesRemainingText()
     {
-        myMissilesText.text = "Missiles: " + playerMissilesRemaining;
+        myMissilesText.text = "Missiles in Storage: " + playerMissilesRemaining;
+        UpdateMissilesInLauncherText();
     }
 
-    public void UpdateScoreText ()
+    // Update the missiles loaded in the launcher text
+    public void UpdateMissilesInLauncherText()
+    {
+        MissilesLeftInLauncherText.text = "Missiles Loaded: " + currentMissilesLoadedInLauncher;
+    }
+
+    // Update the score text
+    public void UpdateScoreText()
     {
         myScoreText.text = "Score: " + score;
     }
 
+    // Update the level text
     public void UpdateLevelText()
     {
-       myLevelText.text = "Level: " + level;
+        myLevelText.text = "Level: " + level;
     }
 
+    // Add points for destroyed missiles
     public void AddMissileDestroyedPoints()
     {
         score += missileDestroyedPoints;
@@ -81,12 +93,66 @@ public class GameController : MonoBehaviour
         UpdateScoreText();
     }
 
+    // Decrease the count of remaining enemy missiles
     public void EnemyMissileDestroyed()
     {
         enemyMissilesRemainingInRound--;
-        Debug.Log(enemyMissilesRemainingInRound);
+        Debug.Log("Enemy missiles remaining in round: " + enemyMissilesRemainingInRound);
     }
 
+    // Logic when a player fires a missile
+    public void PlayerFiredMissile()
+    {
+        if (currentMissilesLoadedInLauncher > 0)
+        {
+            currentMissilesLoadedInLauncher--;
+        }
+
+        if (currentMissilesLoadedInLauncher == 0)
+        {
+            if (playerMissilesRemaining >= 10)
+            {
+                currentMissilesLoadedInLauncher = 10;
+                playerMissilesRemaining -= 10;
+            }
+            else
+            {
+                currentMissilesLoadedInLauncher = playerMissilesRemaining;
+                playerMissilesRemaining = 0;
+            }
+        }
+
+        UpdateMissilesRemainingText();
+    }
+
+    // Logic when a missile launcher is hit
+    public void MissileLauncherHit()
+    {
+        Debug.Log("Missile launcher hit. Before hit - Loaded: " + currentMissilesLoadedInLauncher + ", Remaining: " + playerMissilesRemaining);
+
+        // Set loaded missiles to 0
+        currentMissilesLoadedInLauncher = 0;
+
+        // Attempt to reload the launcher with 10 missiles if available
+        if (playerMissilesRemaining >= 10)
+        {
+            currentMissilesLoadedInLauncher = 10;
+            playerMissilesRemaining -= 10;
+        }
+        else
+        {
+            currentMissilesLoadedInLauncher = playerMissilesRemaining;
+            playerMissilesRemaining = 0;
+        }
+
+        // Update UI texts
+        UpdateMissilesRemainingText();
+        UpdateMissilesInLauncherText();
+
+        Debug.Log("Missile launcher hit. After hit - Loaded: " + currentMissilesLoadedInLauncher + ", Remaining: " + playerMissilesRemaining);
+    }
+
+    // Start a new round of the game
     public void StartRound()
     {
         myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMissilesThisRound;
@@ -94,6 +160,7 @@ public class GameController : MonoBehaviour
         myEnemyMissileSpawner.StartRound();
     }
 
+    // Handle the end of a round
     public IEnumerator EndOfRound()
     {
         yield return new WaitForSeconds(0.5f);
@@ -108,10 +175,10 @@ public class GameController : MonoBehaviour
         leftOverCityBonusText.text = "Remaining City Bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total Bonus: " + totalBonus;
 
-        score = score + totalBonus;
+        score += totalBonus;
+        level += 1;
         UpdateScoreText();
 
-        //Increase enemy missile count and speed for the next round here
         countdownText.text = "3";
         yield return new WaitForSeconds(1.5f);
         countdownText.text = "2";
@@ -120,10 +187,17 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         endOfRoundPanel.SetActive(false);
+        isRoundOver = false;
+
+        // Updating new round settings
+        playerMissilesRemaining = 45;
+        enemyMissileSpeed *= enemyMissileSpeedMultiplier;
+
+        currentMissilesLoadedInLauncher = 10;
+        playerMissilesRemaining -= 10;
 
         StartRound();
-
-
+        UpdateLevelText();
+        UpdateMissilesRemainingText();
     }
-
 }

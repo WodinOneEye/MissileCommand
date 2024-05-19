@@ -8,20 +8,23 @@ public class enemyMissile : MonoBehaviour
     [SerializeField] private GameObject explosionEnemyMissilePrefab;
 
     private GameController myGameController;
-
-    GameObject[] defenders;
-
-    Vector3 target;
+    private GameObject[] defenders;
+    private Vector3 target;
 
     void Start()
     {
+        myGameController = GameObject.FindObjectOfType<GameController>();
         defenders = GameObject.FindGameObjectsWithTag("Defenders");
-        Debug.Log(defenders.Length);
         target = defenders[Random.Range(0, defenders.Length)].transform.position;
+        speed = myGameController.enemyMissileSpeed;
     }
 
     void Update()
     {
+        Vector3 direction = target - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f; // Subtract 90 degrees to correct for the default sprite orientation
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
         transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
 
@@ -34,6 +37,11 @@ public class enemyMissile : MonoBehaviour
             GameObject explosion = Instantiate(explosionEnemyMissilePrefab, transform.position, Quaternion.identity);
             Destroy(explosion, 1f); // Destroy explosion after 1 second
             Destroy(gameObject); // Destroy the missile
+            if (col.GetComponent<MissileLauncherScript>() != null)
+            {
+                myGameController.MissileLauncherHit();
+                return;
+            }
             Destroy(col.gameObject); // Destroy the defender
         }
         else if (col.CompareTag("Ground"))
@@ -48,16 +56,10 @@ public class enemyMissile : MonoBehaviour
         }
     }
 
-    private void MissileExplode () //spawns explosion and destroys missile
+    private void MissileExplode() //spawns explosion and destroys missile
     {
         GameObject explosion = Instantiate(explosionEnemyMissilePrefab, transform.position, Quaternion.identity);
         Destroy(explosion, 1f);
         Destroy(gameObject);
-       
     }
-
-
-
-
-
 }

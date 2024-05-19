@@ -21,12 +21,13 @@ public class CursorController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && myGameController.playerMissilesRemaining > 0)
+        if (Input.GetMouseButtonDown(0) && myGameController.currentMissilesLoadedInLauncher > 0)
         {
             // Instantiate the missile
             GameObject newMissile = Instantiate(missilePrefab, missileLauncherPrefab.transform.position, Quaternion.identity);
-            myGameController.playerMissilesRemaining--;
-            myGameController.UpdateMissilesRemainingText();
+            //myGameController.playerMissilesRemaining--;
+            myGameController.PlayerFiredMissile();
+            
 
             // Calculate the direction towards the mouse position
             Vector3 targetDirection = Input.mousePosition - Camera.main.WorldToScreenPoint(missileLauncherPrefab.transform.position);
