@@ -102,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   explosionEnemyMissilePrefab: {fileID: 2121546165084710676, guid: 9acbe4ad6b2f3ac4bb1d3f62a1d2aa2b, type: 3}
+  enemyMissilePrefab: {fileID: 896188062203822319}
 --- !u!61 &1106874008671006851
 BoxCollider2D:
   m_ObjectHideFlags: 0

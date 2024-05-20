@@ -7,8 +7,12 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject endOfRoundPanel;
+    [SerializeField] private GameObject newHighScorePanel;
+    [SerializeField] private TMP_InputField newhighScoreInitials;
     private EnemyMissileSpawner myEnemyMissileSpawner;
     private bool isRoundOver = false;
+
+    private StartMenuManager myStartMenuManager;
 
     public int score = 0;
     public int level = 1;
@@ -20,7 +24,7 @@ public class GameController : MonoBehaviour
     public int playerMissilesRemaining = 45;
     public int currentMissilesLoadedInLauncher = 0;
     private int enemyMissilesThisRound = 20;
-    private int enemyMissilesRemainingInRound = 0;
+    public int enemyMissilesRemainingInRound = 0;
     [SerializeField] private int missileEndOfRoundPoints = 5;
     [SerializeField] private int cityEndOfRoundPoints = 100;
 
@@ -45,6 +49,8 @@ public class GameController : MonoBehaviour
         myEnemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
         cityCounter = GameObject.FindObjectsOfType<CityScript>().Length;
 
+        myStartMenuManager = GameObject.FindObjectOfType<StartMenuManager>();
+
         // Update UI texts
         UpdateScoreText();
         UpdateLevelText();
@@ -59,14 +65,29 @@ public class GameController : MonoBehaviour
         // Check if the round is over
         if (enemyMissilesRemainingInRound <= 0 && !isRoundOver)
         {
-            Debug.Log("Round is over");
+            //Debug.Log("Round is over");
             isRoundOver = true;
             StartCoroutine(EndOfRound());
         }
 
-        if (cityCounter <=0)
+        if (cityCounter <= 0)
         {
-            SceneManager.LoadScene("TheEnd");
+            if (myStartMenuManager.IsThisANewHighScore(score))
+            {
+                
+                newHighScorePanel.SetActive(true);
+
+            }
+            else
+            {
+                //Debug.Log("Not a new high score");
+                SceneManager.LoadScene("TheEnd");
+
+            }
+
+
+
+            //SceneManager.LoadScene("TheEnd");
         }
     }
 
@@ -177,11 +198,11 @@ public class GameController : MonoBehaviour
         endOfRoundPanel.SetActive(true);
 
         CityScript[] cities = GameObject.FindObjectsOfType<CityScript>();
-        int leftOverMissileBonus = (playerMissilesRemaining + currentMissilesLoadedInLauncher ) * missileEndOfRoundPoints;
+        int leftOverMissileBonus = (playerMissilesRemaining + currentMissilesLoadedInLauncher) * missileEndOfRoundPoints;
         int leftOverCityBonus = cities.Length * cityEndOfRoundPoints;
         int totalBonus = leftOverCityBonus + leftOverMissileBonus;
 
-        if (level >=3 &&  level < 5)
+        if (level >= 3 && level < 5)
         {
             totalBonus *= 2;
         }
@@ -210,8 +231,6 @@ public class GameController : MonoBehaviour
         leftOverCityBonusText.text = "Remaining City Bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total Bonus: " + totalBonus;
 
-
-
         score += totalBonus;
         level += 1;
         UpdateScoreText();
@@ -236,5 +255,11 @@ public class GameController : MonoBehaviour
         StartRound();
         UpdateLevelText();
         UpdateMissilesRemainingText();
+    }
+
+    public void SubmitClicked()
+    {
+        myStartMenuManager.AddNewHighScore(new HighScoreEntry { score = this.score, name = newhighScoreInitials.text });
+        SceneManager.LoadScene("StartMenu");
     }
 }
