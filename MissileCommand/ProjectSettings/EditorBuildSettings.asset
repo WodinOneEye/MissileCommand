@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MissileCommandGame_01.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/TheEnd.unity
+    guid: a8196112a2d7e9c438ae8a1ea9f7207a
+  - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: 1538e4ff386a9fd4cab04e5ea7ef0272
   m_configObjects: {}

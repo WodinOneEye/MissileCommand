@@ -43,6 +43,7 @@ public class enemyMissile : MonoBehaviour
                 return;
             }
             Destroy(col.gameObject); // Destroy the defender
+            myGameController.cityCounter--;
         }
         else if (col.CompareTag("Ground"))
         {

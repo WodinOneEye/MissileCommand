@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class GameController : MonoBehaviour
 
     public int score = 0;
     public int level = 1;
+
+    public int cityCounter = 0;
+
     public float enemyMissileSpeed = 5f;
     [SerializeField] private float enemyMissileSpeedMultiplier = 0.25f;
     public int playerMissilesRemaining = 45;
@@ -39,6 +43,7 @@ public class GameController : MonoBehaviour
         playerMissilesRemaining -= 10;
 
         myEnemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
+        cityCounter = GameObject.FindObjectsOfType<CityScript>().Length;
 
         // Update UI texts
         UpdateScoreText();
@@ -57,6 +62,11 @@ public class GameController : MonoBehaviour
             Debug.Log("Round is over");
             isRoundOver = true;
             StartCoroutine(EndOfRound());
+        }
+
+        if (cityCounter <=0)
+        {
+            SceneManager.LoadScene("TheEnd");
         }
     }
 
@@ -167,13 +177,40 @@ public class GameController : MonoBehaviour
         endOfRoundPanel.SetActive(true);
 
         CityScript[] cities = GameObject.FindObjectsOfType<CityScript>();
-        int leftOverMissileBonus = playerMissilesRemaining * missileEndOfRoundPoints;
+        int leftOverMissileBonus = (playerMissilesRemaining + currentMissilesLoadedInLauncher ) * missileEndOfRoundPoints;
         int leftOverCityBonus = cities.Length * cityEndOfRoundPoints;
         int totalBonus = leftOverCityBonus + leftOverMissileBonus;
+
+        if (level >=3 &&  level < 5)
+        {
+            totalBonus *= 2;
+        }
+
+        else if (level >= 5 && level < 7)
+        {
+            totalBonus *= 3;
+        }
+
+        else if (level >= 7 && level < 9)
+        {
+            totalBonus *= 4;
+        }
+
+        else if (level >= 9 && level < 11)
+        {
+            totalBonus *= 5;
+        }
+
+        else if (level >= 11)
+        {
+            totalBonus *= 6;
+        }
 
         leftOverMissileBonusText.text = "Remaining Missile Bonus: " + leftOverMissileBonus;
         leftOverCityBonusText.text = "Remaining City Bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total Bonus: " + totalBonus;
+
+
 
         score += totalBonus;
         level += 1;

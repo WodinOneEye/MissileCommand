@@ -5167,7 +5167,7 @@ PrefabInstance:
       objectReference: {fileID: 1881497031}
     - target: {fileID: 8506282972335914113, guid: bb4d5b729c8d3884b9351446617c4169, type: 3}
       propertyPath: enemyMissileSpeedMultiplier
-      value: 1.1
+      value: 1.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5183,8 +5183,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1083115883943306457, guid: a2af47ed30de0b34ba5c94da05587213, type: 3}
+      propertyPath: enemyMissilePrefab
+      value: 
+      objectReference: {fileID: 896188062203822319, guid: 2af8cdabcbdf5cd4eb69147a6cfd1c8c, type: 3}
+    - target: {fileID: 1083115883943306457, guid: a2af47ed30de0b34ba5c94da05587213, type: 3}
       propertyPath: delayBetweenMissiles
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4201984898562904564, guid: a2af47ed30de0b34ba5c94da05587213, type: 3}
       propertyPath: m_LocalPosition.x
