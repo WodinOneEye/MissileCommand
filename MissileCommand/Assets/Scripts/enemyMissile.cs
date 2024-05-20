@@ -8,6 +8,9 @@ public class enemyMissile : MonoBehaviour
     [SerializeField] private GameObject explosionEnemyMissilePrefab;
 
     private GameController myGameController;
+
+    AudioSource myAudio;
+
     private GameObject[] defenders;
     private Vector3 target;
 

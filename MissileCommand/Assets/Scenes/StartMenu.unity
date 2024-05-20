@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 967375235}
   - component: {fileID: 967375234}
   m_Layer: 0
-  m_Name: Space_Ambience
+  m_Name: CyberTrooper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -419,9 +419,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0c68ed36a7dfd8742b450cc9b96e7a03, type: 3}
+  m_audioClip: {fileID: 8300000, guid: cd9e65d0a6933fc408c8f5ef7817c47e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.495
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0

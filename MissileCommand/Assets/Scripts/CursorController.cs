@@ -6,6 +6,9 @@ public class CursorController : MonoBehaviour
 {
     [SerializeField] GameObject missilePrefab;
     [SerializeField] GameObject missileLauncherPrefab;
+
+    AudioSource myAudio;
+
     [SerializeField] private Texture2D cursorTexture;
     private Vector2 cursorHotspot;
 
@@ -15,6 +18,8 @@ public class CursorController : MonoBehaviour
     {
         myGameController = FindObjectOfType<GameController>();
         
+        myAudio = GetComponent<AudioSource>();
+
         cursorHotspot = new Vector2(cursorTexture.width / 2f, cursorTexture.height / 2f);
         Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
     }
@@ -27,6 +32,7 @@ public class CursorController : MonoBehaviour
             GameObject newMissile = Instantiate(missilePrefab, missileLauncherPrefab.transform.position, Quaternion.identity);
             //myGameController.playerMissilesRemaining--;
             myGameController.PlayerFiredMissile();
+            myAudio.Play();
             
 
             // Calculate the direction towards the mouse position
