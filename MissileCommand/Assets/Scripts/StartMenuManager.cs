@@ -9,22 +9,9 @@ public class StartMenuManager : MonoBehaviour
 {
 
     [SerializeField] private GameObject highScorePanel;
+    [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private GameObject howToPlayPanel;
     [SerializeField] private TextMeshProUGUI[] highScoreTextFields;
-    
-
-    
-
-
-
-
-    void Start()
-    {
-                
- 
-    }
-
-
-
 
     public void StartGame()
     {
@@ -44,7 +31,17 @@ public class StartMenuManager : MonoBehaviour
         //Debug.Log("Clicked high scores button");
     }
 
-    
+    public void ShowCredits()
+    {
+        creditsPanel.SetActive(true);
+        
+    }
+
+    public void HideCredits()
+    {
+        creditsPanel.SetActive(false);
+
+    }
 
     public void DisplayHighScore()
     {
@@ -62,6 +59,12 @@ public class StartMenuManager : MonoBehaviour
                 highScoreTextFields[i].text = "         ---                                                 ---";
             }
         }
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Quitting Game");
+        Application.Quit();
     }
 }
 
