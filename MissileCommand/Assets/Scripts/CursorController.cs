@@ -26,7 +26,7 @@ public class CursorController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && myGameController.currentMissilesLoadedInLauncher > 0)
+        if (Input.GetMouseButtonDown(0) && myGameController.currentMissilesLoadedInLauncher > 0 && !myGameController.isGameOver)
         {
             // Instantiate the missile
             GameObject newMissile = Instantiate(missilePrefab, missileLauncherPrefab.transform.position, Quaternion.identity);

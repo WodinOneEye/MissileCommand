@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     private bool isRoundOver = false;
 
     private StartMenuManager myStartMenuManager;
+    private ScoreManager myScoreManager;
 
     public int score = 0;
     public int level = 1;
@@ -27,6 +28,8 @@ public class GameController : MonoBehaviour
     public int enemyMissilesRemainingInRound = 0;
     [SerializeField] private int missileEndOfRoundPoints = 5;
     [SerializeField] private int cityEndOfRoundPoints = 100;
+
+    public bool isGameOver;
 
     // Score values
     private int missileDestroyedPoints = 25;
@@ -50,6 +53,10 @@ public class GameController : MonoBehaviour
         cityCounter = GameObject.FindObjectsOfType<CityScript>().Length;
 
         myStartMenuManager = GameObject.FindObjectOfType<StartMenuManager>();
+        myScoreManager = GameObject.FindObjectOfType<ScoreManager>();
+
+        // Set character limit for the input field to 3
+        newhighScoreInitials.characterLimit = 3;
 
         // Update UI texts
         UpdateScoreText();
@@ -62,32 +69,31 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        // Check if the round is over
-        if (enemyMissilesRemainingInRound <= 0 && !isRoundOver)
-        {
-            //Debug.Log("Round is over");
-            isRoundOver = true;
-            StartCoroutine(EndOfRound());
-        }
-
         if (cityCounter <= 0)
         {
-            if (myStartMenuManager.IsThisANewHighScore(score))
-            {
-                
-                newHighScorePanel.SetActive(true);
+            isGameOver = true;
 
+            if (myScoreManager.IsThisANewHighScore(score))
+            {
+                newHighScorePanel.SetActive(true);
             }
             else
             {
-                //Debug.Log("Not a new high score");
                 SceneManager.LoadScene("TheEnd");
-
             }
 
+            return; // Added return here to avoid continuing the update if the game is over
+        }
 
-
-            //SceneManager.LoadScene("TheEnd");
+        // Check if the round is over
+        if (enemyMissilesRemainingInRound <= 0 && !isRoundOver && !isGameOver)
+        {
+            enemyMissile[] m = GameObject.FindObjectsOfType<enemyMissile>();
+            if (m.Length == 0)
+            {
+                isRoundOver = true;
+                StartCoroutine(EndOfRound());
+            }
         }
     }
 
@@ -259,7 +265,12 @@ public class GameController : MonoBehaviour
 
     public void SubmitClicked()
     {
-        myStartMenuManager.AddNewHighScore(new HighScoreEntry { score = this.score, name = newhighScoreInitials.text });
+        string initials = newhighScoreInitials.text.ToUpper();
+        if (initials.Length > 3)
+        {
+            initials = initials.Substring(0, 3);
+        }
+        myScoreManager.AddNewHighScore(new HighScoreEntry { score = this.score, name = initials });
         SceneManager.LoadScene("StartMenu");
     }
 }
