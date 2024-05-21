@@ -26,25 +26,28 @@ public class ScoreManager : MonoBehaviour
 
 
     void Start()
-    {   
-        /*
-        highScoreEntryList = new List<HighScoreEntry>()
-      {
-          new HighScoreEntry { score = 0, name = "JBL"},
-          new HighScoreEntry { score = 0, name = "JBL"},
-          new HighScoreEntry { score = 0, name = "JBL"},
-          new HighScoreEntry { score = 0, name = "JBL"},
-          new HighScoreEntry { score = 0, name = "JBL"}
-      };
+    {
+        highScoreEntryList = SaveLoadManager.LoadScores();
 
-        SaveScores(); 
-        */
+        if (highScoreEntryList == null || highScoreEntryList.Count == 0)
+        {
+            highScoreEntryList = new List<HighScoreEntry>()
+        {
+            new HighScoreEntry { score = 0, name = "JBL"},
+            new HighScoreEntry { score = 0, name = "JBL"},
+            new HighScoreEntry { score = 0, name = "JBL"},
+            new HighScoreEntry { score = 0, name = "JBL"},
+            new HighScoreEntry { score = 0, name = "JBL"}
+        };
+
+            SaveScores();
+        }
     }
 
-    
+
     void Update()
     {
-        
+
     }
 
     public void SaveScores()
@@ -92,6 +95,13 @@ public class ScoreManager : MonoBehaviour
 
         highScoreEntryList.RemoveAt(5);
     }
+
+    public List<HighScoreEntry> GetHighScores()
+    {
+        return highScoreEntryList;
+    }
+
+
 }
 
 [Serializable]

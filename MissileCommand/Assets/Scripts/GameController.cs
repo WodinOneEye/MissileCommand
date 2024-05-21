@@ -55,9 +55,6 @@ public class GameController : MonoBehaviour
         myStartMenuManager = GameObject.FindObjectOfType<StartMenuManager>();
         myScoreManager = GameObject.FindObjectOfType<ScoreManager>();
 
-        // Set character limit for the input field to 3
-        newhighScoreInitials.characterLimit = 3;
-
         // Update UI texts
         UpdateScoreText();
         UpdateLevelText();
@@ -75,7 +72,15 @@ public class GameController : MonoBehaviour
 
             if (myScoreManager.IsThisANewHighScore(score))
             {
-                newHighScorePanel.SetActive(true);
+                // Check if the new high score qualifies for the top 5
+                if (IsScoreInTop5(score))
+                {
+                    newHighScorePanel.SetActive(true);
+                }
+                else
+                {
+                    SceneManager.LoadScene("TheEnd");
+                }
             }
             else
             {
@@ -96,6 +101,23 @@ public class GameController : MonoBehaviour
             }
         }
     }
+
+    // Method to check if the score is in the top 5
+    private bool IsScoreInTop5(int score)
+    {
+        var highScores = myScoreManager.GetHighScores();
+
+        // If there are fewer than 5 high scores, the score is automatically in the top 5
+        if (highScores.Count < 5)
+        {
+            return true;
+        }
+
+        // Check if the score is higher than the lowest score in the top 5
+        return score > highScores[4].score;
+    }
+
+    // Other methods remain the same...
 
     // Update the remaining missiles text
     public void UpdateMissilesRemainingText()
@@ -212,22 +234,18 @@ public class GameController : MonoBehaviour
         {
             totalBonus *= 2;
         }
-
         else if (level >= 5 && level < 7)
         {
             totalBonus *= 3;
         }
-
         else if (level >= 7 && level < 9)
         {
             totalBonus *= 4;
         }
-
         else if (level >= 9 && level < 11)
         {
             totalBonus *= 5;
         }
-
         else if (level >= 11)
         {
             totalBonus *= 6;
