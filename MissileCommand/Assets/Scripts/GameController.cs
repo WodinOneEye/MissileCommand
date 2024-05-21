@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private int missileEndOfRoundPoints = 5;
     [SerializeField] private int cityEndOfRoundPoints = 100;
 
-    public bool isGameOver;
+    public bool isGameOver = false;
 
     // Score values
     private int missileDestroyedPoints = 25;
@@ -66,28 +66,10 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (cityCounter <= 0)
+        if (cityCounter <= 0 && !isGameOver)
         {
-            isGameOver = true;
-
-            if (myScoreManager.IsThisANewHighScore(score))
-            {
-                // Check if the new high score qualifies for the top 5
-                if (IsScoreInTop5(score))
-                {
-                    newHighScorePanel.SetActive(true);
-                }
-                else
-                {
-                    SceneManager.LoadScene("TheEnd");
-                }
-            }
-            else
-            {
-                SceneManager.LoadScene("TheEnd");
-            }
-
-            return; // Added return here to avoid continuing the update if the game is over
+            HandleGameOver();
+            return;
         }
 
         // Check if the round is over
@@ -99,6 +81,27 @@ public class GameController : MonoBehaviour
                 isRoundOver = true;
                 StartCoroutine(EndOfRound());
             }
+        }
+    }
+
+    private void HandleGameOver()
+    {
+        isGameOver = true;
+        if (myScoreManager.IsThisANewHighScore(score))
+        {
+            // Check if the new high score qualifies for the top 5
+            if (IsScoreInTop5(score))
+            {
+                newHighScorePanel.SetActive(true);
+            }
+            else
+            {
+                SceneManager.LoadScene("TheEnd");
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene("TheEnd");
         }
     }
 

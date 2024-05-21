@@ -13,7 +13,7 @@ public static class SaveLoadManager
         BinaryFormatter myFormatter = new BinaryFormatter();
 
         // create a local path where to save
-        string path = Application.persistentDataPath + "\\data2.dat";
+        string path = Application.persistentDataPath + "\\data3.dat";
 
         //Create a file stream that creates and opens a file
         FileStream stream = new FileStream(path, FileMode.Create);
@@ -29,7 +29,7 @@ public static class SaveLoadManager
     public static List<HighScoreEntry> LoadScores()
     {
         // Read a local path where saved data is
-        string path = Application.persistentDataPath + "\\data2.dat";
+        string path = Application.persistentDataPath + "\\data3.dat";
 
         if (File.Exists(path))
         {
