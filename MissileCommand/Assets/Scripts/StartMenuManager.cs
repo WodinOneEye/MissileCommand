@@ -43,6 +43,18 @@ public class StartMenuManager : MonoBehaviour
 
     }
 
+    public void ShowHowToPlay()
+    {
+        howToPlayPanel.SetActive(true);
+    }
+
+    public void HideHowToPlay()
+    {
+        howToPlayPanel?.SetActive(false);
+    }
+
+
+
     public void DisplayHighScore()
     {
         List<HighScoreEntry> highScoreEntryList = SaveLoadManager.LoadScores();
